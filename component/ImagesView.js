@@ -61,6 +61,7 @@ export default class ImagesView extends React.Component {
                       dimDepth={1}
                       dimHeight={1}
                       key={image.image_id}
+                      lit={true}
                       texture={{uri: image.thumb_url}}
                       style={{width: 1, height: 1, margin: 0.1}}
                     />

@@ -8,6 +8,8 @@ import {
   Text,
   Image,
   Box,
+  Scene,
+  PointLight,
   NativeModules,
   VrButton,
   View,
@@ -71,6 +73,12 @@ export default class WelcomeToVR extends React.Component {
     return (
       <View>
         <Pano source={asset('chess-world.jpg')}/>
+        <PointLight intensity={0.6} style={{transform: [{translate: [0, 0, 80]}]}}/>
+        <Scene style={{
+          transform: [
+            {translate: [0, 0, 60]}
+          ]
+        }} />
         {
           showImages
           ? this.state.images.map((images, index) => <ImagesView images={images} index={index} key={`ImagesView${index}`} />)
