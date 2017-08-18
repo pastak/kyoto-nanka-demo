@@ -7,6 +7,7 @@
     "start-dev": "yarn run run-p start:*",
     "start:vr-client": "node -e \"console.log('open browser at http://localhost:8081/vr/\\n\\n');\" && node node_modules/react-native/local-cli/cli.js start",
     "start:api-server": "node server",
+    "postinstall": "yarn run build",
     "build": "node node_modules/react-vr/scripts/bundle.js",
     "open": "node -e \"require('xopen')('http://localhost:8081/vr/')\"",
     "devtools": "react-devtools",
