@@ -43,7 +43,7 @@ export default class WelcomeToVR extends React.Component {
 
   requestAccessToken (code) {
     const params = new URLSearchParams(`code=${code}`)
-    fetch('http://localhost:8085/token', {
+    fetch('https://gyazo-vr-demo.herokuapp.com/token', {
       method: 'POST',
       credentials: 'include',
       body: querystring.stringify({code: code}),
@@ -92,8 +92,8 @@ export default class WelcomeToVR extends React.Component {
               onClick={() => {
                 const gyazoOauthAuthorizePath = 'https://gyazo.com/oauth/authorize'
                 const requestUrl = gyazoOauthAuthorizePath
-                  + '?client_id=b38c32eeb069fcc9007e7639518ac7f72c716a5b2e84999b775f5cb5df378f8f'
-                  + '&redirect_uri=' + encodeURIComponent('http://localhost:8081/vr/index.html')
+                  + '?client_id=c885236b75ecd99d2f2f4c1b6be206c86dfbd08b8ea4da66df06d52742b0fb48'
+                  + '&redirect_uri=' + encodeURIComponent('https://gyazo-vr-demo.herokuapp.com/')
                   + '&response_type=code'
                 NativeModules.LinkingManager.openURL(requestUrl)
               }}

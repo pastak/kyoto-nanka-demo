@@ -1,6 +1,7 @@
 const Koa = require('koa')
 const Router = require('koa-router')
 const request = require('request-promise-native')
+const serve = require('koa-static')
 const bodyParser = require('koa-bodyparser')
 const app = new Koa()
 const router = new Router()
@@ -18,9 +19,9 @@ router.post('/token', bodyParser({
     method: 'POST',
     uri: 'https://api.gyazo.com/oauth/token',
     form: {
-      client_id: 'b38c32eeb069fcc9007e7639518ac7f72c716a5b2e84999b775f5cb5df378f8f',
-      client_secret: 'abbee252cdcfbb6f4701a034d423a6b07cea9d9fc4269e36be2d5a64c513b19b',
-      redirect_uri: 'http://localhost:8081/vr/index.html',
+      client_id: 'c885236b75ecd99d2f2f4c1b6be206c86dfbd08b8ea4da66df06d52742b0fb48',
+      client_secret: process.env.CLIENT_SECRET,
+      redirect_uri: 'https://gyazo-vr-demo.herokuapp.com/',
       code: reqBody.code,
       grant_type: 'authorization_code'
     },
@@ -31,5 +32,7 @@ router.post('/token', bodyParser({
 })
 
 app.use(router.routes())
+app.use(serve('./vr'))
+app.use(serve('.'))
 
-app.listen(8085)
+app.listen(process.env.PORT || 8085)
