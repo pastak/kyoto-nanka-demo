@@ -72,7 +72,6 @@ export default class WelcomeToVR extends React.Component {
     const showImages = this.state.accessToken && this.state.images && this.state.images.length > 0
     return (
       <View>
-        <Pano source={asset('chess-world.jpg')}/>
         <PointLight intensity={0.6} style={{transform: [{translate: [0, 0, 80]}]}}/>
         <Scene style={{
           transform: [
