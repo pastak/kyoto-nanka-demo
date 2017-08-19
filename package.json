@@ -40,5 +40,8 @@
   },
   "jest": {
     "preset": "react-vr"
+  },
+  "engines": {
+    "node": "8.2.1"
   }
 }
