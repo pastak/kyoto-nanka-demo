@@ -8,7 +8,6 @@ import {
   Text,
   Image,
   Box,
-  Scene,
   PointLight,
   NativeModules,
   Scene,
