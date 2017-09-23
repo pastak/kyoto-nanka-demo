@@ -23,8 +23,15 @@ export default class ImagesView extends React.Component {
       )
     }
     this.state = {
-      imageSlices
+      imageSlices,
+      rotation: this.props.rotation
     }
+  }
+
+  componentWillReceiveProps (newProps) {
+    this.setState({
+      rotation: newProps.rotation
+    })
   }
 
   render () {
@@ -62,7 +69,12 @@ export default class ImagesView extends React.Component {
                       dimHeight={1}
                       key={image.image_id}
                       texture={{uri: image.thumb_url}}
-                      style={{width: 1, height: 1, margin: 0.1}}
+                      style={{
+                        width: 1, height: 1, margin: 0.1,
+                        transform: [
+                          {rotateY: (this.state.rotation % 360) + 'deg'}
+                        ]
+                      }}
                     />
                   )
                 })
