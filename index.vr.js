@@ -24,9 +24,9 @@ const B_BUTTON = 'B_BUTTON'
 const X_BUTTON = 'X_BUTTON'
 const Y_BUTTON = 'Y_BUTTON'
 const L_BUTTON = 'L_BUTTON'
-const LZ_BUTTON = 'LZ_BUTTON'
+const ZL_BUTTON = 'ZL_BUTTON'
 const R_BUTTON = 'R_BUTTON'
-const RZ_BUTTON = 'RZ_BUTTON'
+const ZR_BUTTON = 'ZR_BUTTON'
 const PLUS_BUTTON = 'PLUS_BUTTON'
 const MINUS_BUTTON = 'MINUS_BUTTON'
 const HOME_BUTTON = 'HOME_BUTTON'
@@ -43,7 +43,14 @@ export default class WelcomeToVR extends React.Component {
       images: [],
       cameraX: 0,
       cameraY: 0,
-      cameraZ: 0
+      cameraZ: 0,
+      boxRotate: 0
+    }
+    this.nextState = {
+      cameraX: 0,
+      cameraY: 0,
+      cameraZ: 0,
+      boxRotate: 0
     }
     this.detectMode()
   }
@@ -99,7 +106,7 @@ export default class WelcomeToVR extends React.Component {
   buttonInfo (event) {
     const KEYMAP = [
       B_BUTTON, A_BUTTON, Y_BUTTON, X_BUTTON,
-      L_BUTTON, R_BUTTON, LZ_BUTTON, RZ_BUTTON,
+      L_BUTTON, R_BUTTON, ZL_BUTTON, ZR_BUTTON,
       MINUS_BUTTON, PLUS_BUTTON,
       L3_BUTTON, R3_BUTTON,
       HOME_BUTTON, SHARE_BUTTON
@@ -113,6 +120,7 @@ export default class WelcomeToVR extends React.Component {
 
   componentDidMount () {
     this.checkGamePad()
+    this.fetchGamePad()
     RCTDeviceEventEmitter.addListener('onReceivedInputEvent', (event) => {
       if (!(event.type === 'GamepadInputEvent' && event.gamepad === 0)) return
       let eventInfo
@@ -123,17 +131,26 @@ export default class WelcomeToVR extends React.Component {
         let value = eventInfo.rawEvent.value
         // なんかSwitchのProコンは値が揺れる
         if (Math.abs(value) < 0.2) return
-        console.log(eventInfo.direction, value)
         value = value / 5
         if ([UP, DOWN].includes(eventInfo.direction)) {
-          this.setState({
+          this.setNextState({
             cameraZ: this.state.cameraZ + value
           })
         } else if ([LEFT, RIGHT].includes(eventInfo.direction)) {
-          this.setState({
+          this.setNextState({
             cameraX: this.state.cameraX + value
           })
         }
+      }
+      if (eventInfo.keyName === ZL_BUTTON) {
+        this.setNextState({
+          boxRotate: this.state.boxRotate - 1
+        })
+      }
+      if (eventInfo.keyName === ZR_BUTTON) {
+        this.setNextState({
+          boxRotate: this.state.boxRotate + 1
+        })
       }
     })
     RCTDeviceEventEmitter.addListener('controllerConnected', () => {
@@ -152,6 +169,16 @@ export default class WelcomeToVR extends React.Component {
     }
   }
 
+  setNextState (nextState) {
+    this.nextState = Object.assign(this.nextState, nextState)
+  }
+
+  fetchGamePad = () => {
+    const showImages = this.state.accessToken && this.state.images && this.state.images.length > 0
+    if (showImages) this.setState(this.nextState)
+    requestAnimationFrame(this.fetchGamePad)
+  }
+
   async checkGamePad () {
     const controllers = await NativeModules.ControllerInfo.getControllers()
     const controller = controllers[0]
@@ -168,7 +195,7 @@ export default class WelcomeToVR extends React.Component {
         }} />
         {
           showImages
-          ? this.state.images.map((images, index) => <ImagesView images={images} index={index} key={`ImagesView${index}`} />)
+          ? this.state.images.map((images, index) => <ImagesView rotation={this.state.boxRotate} images={images} index={index} key={`ImagesView${index}`} />)
           : <VrButton
               style={{
                 transform: [{translate: [0, 0, -1]}],
